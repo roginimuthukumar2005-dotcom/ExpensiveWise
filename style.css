@@ -1,0 +1,446 @@
+/* LOADER */
+
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0f172a;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:99999;
+}
+
+.rupee-loader{
+font-size:90px;
+font-weight:bold;
+color:#22c55e;
+animation:spin 2s linear infinite;
+}
+
+#loader h2{
+margin-top:20px;
+}
+
+#loader p{
+opacity:.8;
+}
+
+@keyframes spin{
+
+0%{
+transform:rotate(0deg);
+}
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+
+
+/* ==========================
+   RESET
+========================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+transition:.3s;
+padding-bottom:50px;
+}
+
+/* ==========================
+   LIGHT MODE
+========================== */
+
+body.light{
+background:#f5f7fb;
+color:#111;
+}
+
+/* ==========================
+   NAVBAR
+========================== */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 30px;
+background:#111827;
+box-shadow:0 5px 15px rgba(0,0,0,.3);
+position:sticky;
+top:0;
+z-index:999;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.nav-actions{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.nav-actions button{
+padding:10px 18px;
+border:none;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* ==========================
+   HERO
+========================== */
+
+.hero{
+text-align:center;
+padding:40px 20px;
+}
+
+.hero h1{
+font-size:36px;
+margin-bottom:10px;
+}
+
+.hero p{
+opacity:.8;
+}
+
+/* ==========================
+   DASHBOARD
+========================== */
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+border-radius:18px;
+padding:20px;
+box-shadow:0 8px 20px rgba(0,0,0,.2);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h3{
+margin-bottom:10px;
+font-size:18px;
+}
+
+.card p{
+font-size:22px;
+font-weight:bold;
+}
+
+/* ==========================
+   ANALYTICS
+========================== */
+
+.analytics-card{
+margin:20px;
+padding:20px;
+background:rgba(255,255,255,.08);
+border-radius:18px;
+}
+
+.analytics-card h2{
+margin-bottom:15px;
+}
+
+.analytics-card ul{
+list-style:none;
+}
+
+.analytics-card li{
+padding:8px 0;
+}
+
+/* ==========================
+   CALENDAR
+========================== */
+
+.calendar-section{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+.calendar-section .calendar-wrapper{
+background:#1e293b;
+padding:20px;
+border-radius:20px;
+width:90%;
+max-width:1000px;
+max-height:90vh;
+overflow:auto;
+}
+
+.calendar-header{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.calendar-header button{
+padding:10px 15px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+#calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:10px;
+}
+
+.calendar-day{
+background:rgba(255,255,255,.08);
+padding:15px;
+text-align:center;
+border-radius:12px;
+cursor:pointer;
+transition:.3s;
+min-height:60px;
+}
+
+.calendar-day:hover{
+transform:scale(1.05);
+}
+
+.saved-day{
+background:#22c55e;
+color:white;
+}
+
+/* ==========================
+   MODAL
+========================== */
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal-content{
+background:#1e293b;
+padding:25px;
+border-radius:18px;
+width:90%;
+max-width:600px;
+max-height:90vh;
+overflow:auto;
+}
+
+body.light .modal-content{
+background:white;
+color:black;
+}
+
+.modal-content h2{
+margin-bottom:20px;
+}
+
+.expense-item{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+.expense-item input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+}
+
+#addItemBtn{
+margin-top:10px;
+padding:10px 15px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.input-group{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:15px;
+}
+
+.input-group input{
+padding:12px;
+border:none;
+border-radius:10px;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:20px;
+flex-wrap:wrap;
+}
+
+.modal-actions button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* ==========================
+   CHART
+========================== */
+
+.chart-section{
+margin:20px;
+text-align:center;
+}
+
+#showChartBtn{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#chartContainer{
+margin-top:20px;
+background:rgba(255,255,255,.08);
+padding:20px;
+border-radius:18px;
+}
+
+canvas{
+max-width:100%;
+}
+
+/* ==========================
+   EXPORT
+========================== */
+
+.export-section{
+text-align:center;
+margin-top:20px;
+}
+
+#exportBtn{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+button{
+background:#3b82f6;
+color:white;
+}
+
+button:hover{
+opacity:.9;
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:28px;
+}
+
+.dashboard{
+grid-template-columns:1fr;
+}
+
+.expense-item{
+flex-direction:column;
+}
+
+.input-group{
+grid-template-columns:1fr;
+}
+
+#calendar{
+gap:5px;
+}
+
+.calendar-day{
+padding:10px;
+font-size:14px;
+}
+
+}
+
+@media(max-width:480px){
+
+.navbar{
+flex-direction:column;
+gap:15px;
+}
+
+.logo{
+font-size:20px;
+}
+
+.hero h1{
+font-size:24px;
+}
+
+.card p{
+font-size:18px;
+}
+
+}
+

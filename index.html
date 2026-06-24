@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ExpenseWise - Smart Expense Tracker</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body>
+
+    <!-- LOADER -->
+<div id="loader">
+
+    <div class="rupee-loader">
+        ₹
+    </div>
+
+    <h2>ExpenseWise</h2>
+    <p>Loading Smart Expense Tracker...</p>
+
+</div>
+
+
+<!-- NAVBAR -->
+<header class="navbar">
+
+<div class="logo">
+<i class="fa-solid fa-wallet"></i>
+ExpenseWise
+</div>
+
+<div class="nav-actions">
+
+<button id="themeBtn">
+🌙
+</button>
+
+<button id="expenseTrackerBtn">
+💰 Expense Tracker
+</button>
+
+<button id="showChartBtn">
+📊 Analytics
+</button>
+
+<button id="exportBtn">
+📥 Export
+</button>
+
+</div>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>Smart Expense Management</h1>
+
+<p>
+Track expenses, savings, balance and spending habits.
+</p>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section class="dashboard">
+
+    
+
+<div class="card">
+<h3>Total Expense</h3>
+<p id="totalExpense">₹0</p>
+</div>
+
+<div class="card">
+<h3>Total Savings</h3>
+<p id="totalSavings">₹0</p>
+</div>
+
+<div class="card">
+<h3>Total Balance</h3>
+<p id="totalBalance">₹0</p>
+</div>
+
+<div class="card">
+<h3>Recorded Days</h3>
+<p id="recordedDays">0</p>
+</div>
+
+<div class="card">
+<h3>Most Spent Category</h3>
+<p id="topCategory">-</p>
+</div>
+
+<div class="card">
+<h3>Highest Spending Day</h3>
+<p id="highestDay">-</p>
+</div>
+
+<div class="card">
+<h3>Lowest Spending Day</h3>
+<p id="lowestDay">-</p>
+</div></section>
+
+<!-- TOP 3 CATEGORIES -->
+
+<section class="analytics-card">
+
+<h2>Top Spending Categories</h2>
+
+<ul id="topCategories"></ul>
+
+</section>
+
+
+
+
+
+<!-- CALENDAR SECTION -->
+
+<section
+class="calendar-section"
+id="calendarSection"
+style="display:none;">
+<div class="calendar-wrapper">
+<div class="calendar-header">
+
+<button id="prevMonth">
+◀
+</button>
+
+<h2 id="monthTitle"></h2>
+
+<button id="nextMonth">
+▶
+</button>
+
+<button id="closeCalendar">
+❌
+</button>
+
+</div>
+
+<div id="calendar"></div>
+</div>
+
+</section>
+
+<!-- EXPENSE MODAL -->
+
+<div
+class="modal"
+id="expenseModal">
+
+<div class="modal-content">
+
+<h2 id="selectedDate">
+Selected Date
+</h2>
+
+<div id="expenseItemsContainer">
+
+</div>
+
+<button id="addItemBtn">
+➕ Add Expense Item
+</button>
+
+<div class="input-group">
+
+<input
+type="number"
+id="savingsInput"
+placeholder="Savings">
+
+<input
+type="number"
+id="balanceInput"
+placeholder="Balance">
+
+</div>
+
+<div class="modal-actions">
+
+<button id="saveBtn">
+💾 Save
+</button>
+
+<button id="deleteBtn">
+🗑 Delete
+</button>
+
+<button id="closeModal">
+❌ Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
+
