@@ -46,9 +46,15 @@ ExpenseWise
 💰 Expense Tracker
 </button>
 
+<!-- ==========================
+     ANALYTICS CHART
+========================== -->
 <button id="showChartBtn">
-📊 Analytics
+    <i class="fa-solid fa-chart-pie"></i>
+    Analytics
 </button>
+
+
 
 <button id="exportBtn">
 📥 Export
@@ -57,7 +63,6 @@ ExpenseWise
 </div>
 
 </header>
-
 <!-- HERO -->
 
 <section class="hero">
@@ -67,6 +72,170 @@ ExpenseWise
 <p>
 Track expenses, savings, balance and spending habits.
 </p>
+
+</section>
+<!-- ==========================
+     ANALYTICS MODAL
+========================== -->
+
+<div class="modal" id="analyticsModal">
+
+    <div class="analyticsModalContent">
+
+        <div class="analyticsHeader">
+
+            <h2>
+                📊 Expense Analytics
+            </h2>
+
+            <button id="closeAnalytics">
+                ❌
+            </button>
+
+        </div>
+
+        <canvas
+            id="expenseChart"
+            width="420"
+            height="420">
+        </canvas>
+
+        <div class="analyticsSummary">
+
+            <h3>Top Categories</h3>
+
+            <ul id="chartLegend">
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ==========================
+     WEEKLY BUDGET HERO
+========================== -->
+
+<section class="budgetHero">
+
+    <div class="budgetLeft">
+
+        <h2>💰 Weekly Budget</h2>
+
+        <h1>
+            <span id="weekSpent">0</span>
+            /
+            <span id="weeklyLimit">0</span>
+        </h1>
+
+        <p>
+            Remaining :
+            <span id="remainingBudget">
+                ₹0
+            </span>
+        </p>
+
+        <button id="setLimitBtn">
+            ⚙ Set Weekly Limit
+        </button>
+
+    </div>
+
+    <div class="budgetCenter">
+
+        <div class="progressBar">
+
+            <div
+            id="budgetProgress"
+            class="progressFill">
+            </div>
+
+        </div>
+
+        <div class="progressMarks">
+
+            <span>0%</span>
+
+            <span>50%</span>
+
+            <span>75%</span>
+
+            <span>90%</span>
+
+            <span>100%</span>
+
+        </div>
+
+    </div>
+
+    <div class="budgetRight">
+
+        <div id="budgetPercent">
+
+            0%
+
+        </div>
+
+        <small>
+
+            Budget Used
+
+        </small>
+
+    </div>
+
+</section>
+
+<!-- ==========================
+     SAVINGS GOAL
+========================== -->
+
+<section class="goalHero">
+
+    <div class="goalLeft">
+        <h2>🎯 Savings Goal</h2>
+
+        <h1 id="goalName">
+            Buy Laptop
+        </h1>
+
+        <p>
+            Goal :
+            <span id="goalTarget">
+                ₹70000
+            </span>
+        </p>
+
+        <p>
+            Saved :
+            <span id="goalSaved">
+                ₹0
+            </span>
+        </p>
+
+        <button id="setGoalBtn">
+            Set Goal
+        </button>
+
+    </div>
+
+    <div class="goalRight">
+
+        <div class="progressBar">
+
+            <div
+                id="goalProgress"
+                class="progressFill">
+            </div>
+
+        </div>
+
+        <h2 id="goalPercent">
+            0%
+        </h2>
+
+    </div>
 
 </section>
 
@@ -109,7 +278,8 @@ Track expenses, savings, balance and spending habits.
 <div class="card">
 <h3>Lowest Spending Day</h3>
 <p id="lowestDay">-</p>
-</div></section>
+</div>
+</section>
 
 <!-- TOP 3 CATEGORIES -->
 
@@ -210,9 +380,86 @@ placeholder="Balance">
 </div>
 
 
+<!-- Weekly Limit Modal -->
 
+<div class="modal" id="limitModal">
 
+<div class="modal-content">
 
+<h2>Weekly Spending Limit</h2>
+
+<input
+type="number"
+id="weeklyLimitInput"
+placeholder="Enter Weekly Limit">
+
+<br><br>
+
+<button id="saveLimitBtn">
+Save Limit
+</button>
+
+<button id="closeLimitBtn">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+<!-- Budget Alert -->
+
+<div id="budgetAlert">
+
+<div class="alert-box">
+
+<div class="alert-icon">
+⚠
+</div>
+
+<h2>Spend Limit Reached</h2>
+
+<p id="alertMessage"></p>
+
+<button id="closeAlert">
+OK
+</button>
+
+</div>
+
+</div>
+
+<div id="goalModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Set Savings Goal</h2>
+
+        <input
+            type="text"
+            id="goalNameInput"
+            placeholder="Goal Name">
+
+        <br><br>
+
+        <input
+            type="number"
+            id="goalAmountInput"
+            placeholder="Target Amount">
+
+        <br><br>
+
+        <button id="saveGoalBtn">
+            Save Goal
+        </button>
+
+        <button id="closeGoalBtn">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
 <script src="script.js"></script>
 
 </body>
