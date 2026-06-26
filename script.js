@@ -48,6 +48,29 @@ document.getElementById("themeBtn");
 
 let currentDate = new Date();
 let selectedDate = "";
+let savingsGoal =
+Number(localStorage.getItem("goalAmount")) || 0;
+
+let goalName =
+localStorage.getItem("goalName") || "Budget Goal";
+
+/* ==========================
+   ALERT STATUS
+========================== */
+
+let budgetAlertShown =
+localStorage.getItem(
+"budgetAlertShown"
+) === "true";
+
+let alert50 =
+localStorage.getItem("alert50") === "true";
+
+let alert75 =
+localStorage.getItem("alert75") === "true";
+
+let alert90 =
+localStorage.getItem("alert90") === "true";
 
 /* ==========================
    STORAGE
@@ -227,9 +250,37 @@ e=>e.date===fullDate
 
 if(exists){
 
+let total=0;
+
+exists.items.forEach(item=>{
+
+total+=item.amount;
+
+});
+
+if(total<200){
+
 dayBox.classList.add(
-"saved-day"
+"low-spending"
 );
+
+}
+
+else if(total<500){
+
+dayBox.classList.add(
+"medium-spending"
+);
+
+}
+
+else{
+
+dayBox.classList.add(
+"high-spending"
+);
+
+}
 
 }
 
@@ -536,6 +587,7 @@ renderCalendar();
 updateDashboard();
 
 drawChart();
+updateWeeklyBudget();
 
 alert(
 "Saved Successfully ✅"
@@ -767,9 +819,7 @@ lowestAmount === Infinity
 function drawChart(){
 
 const canvas =
-document.getElementById(
-"expenseChart"
-);
+document.getElementById("expenseChart");
 
 if(!canvas) return;
 
@@ -783,46 +833,64 @@ canvas.width,
 canvas.height
 );
 
+/* Collect Category Data */
+
 let categories = {};
 
 expenses.forEach(day=>{
 
-day.items.forEach(item=>{
+    day.items.forEach(item=>{
 
-categories[item.name] =
-(categories[item.name] || 0)
-+ item.amount;
+        categories[item.name] =
+        (categories[item.name] || 0)
+        + item.amount;
 
-});
+    });
 
 });
 
 const data =
 Object.entries(categories);
 
-if(data.length === 0){
+/* No Expense */
 
-ctx.font =
-"20px Arial";
+if(data.length===0){
+
+ctx.font="22px Arial";
+
+ctx.fillStyle="#888";
+
+ctx.textAlign="center";
 
 ctx.fillText(
 "No Expense Data",
-120,
-200
+canvas.width/2,
+canvas.height/2
 );
+
+const legend =
+document.getElementById(
+"chartLegend"
+);
+
+legend.innerHTML=
+"<li>No expense recorded.</li>";
 
 return;
 
 }
 
+/* Total */
+
 const total =
 data.reduce(
-(sum,item)=>
-sum + item[1],
+(sum,item)=>sum+item[1],
 0
 );
 
-const colors = [
+/* Colors */
+
+const colors=[
 "#22c55e",
 "#3b82f6",
 "#f59e0b",
@@ -830,16 +898,30 @@ const colors = [
 "#8b5cf6",
 "#14b8a6",
 "#ec4899",
-"#f97316"
+"#06b6d4",
+"#f97316",
+"#84cc16"
 ];
 
-let startAngle = 0;
+const centerX =
+canvas.width/2;
 
-data.forEach(
-(item,index)=>{
+const centerY =
+canvas.height/2;
 
-const sliceAngle =
-(item[1]/total)
+const radius =
+140;
+
+let startAngle=0;
+
+/* Draw Pie */
+
+data.forEach((item,index)=>{
+
+const amount=item[1];
+
+const sliceAngle=
+(amount/total)
 *
 Math.PI
 *
@@ -848,68 +930,131 @@ Math.PI
 ctx.beginPath();
 
 ctx.moveTo(
-200,
-200
+centerX,
+centerY
 );
 
 ctx.arc(
-200,
-200,
-140,
+centerX,
+centerY,
+radius,
 startAngle,
-startAngle +
-sliceAngle
+startAngle+sliceAngle
 );
 
 ctx.closePath();
 
-ctx.fillStyle =
-colors[
-index %
-colors.length
-];
+ctx.fillStyle=
+colors[index%colors.length];
 
 ctx.fill();
 
-startAngle +=
-sliceAngle;
+/* Percentage */
 
-}
-);
+const middleAngle=
+startAngle+
+sliceAngle/2;
 
-/* LEGEND */
+const x=
+centerX+
+Math.cos(middleAngle)*90;
 
-let y = 20;
+const y=
+centerY+
+Math.sin(middleAngle)*90;
 
-data.forEach(
-(item,index)=>{
+ctx.fillStyle="white";
 
-ctx.fillStyle =
-colors[
-index %
-colors.length
-];
+ctx.font="bold 14px Arial";
 
-ctx.fillRect(
-10,
-y,
-15,
-15
-);
-
-ctx.fillStyle =
-"#000";
+ctx.textAlign="center";
 
 ctx.fillText(
-`${item[0]} ₹${item[1]}`,
-35,
-y + 12
+
+Math.round(
+(amount/total)*100
+)+"%",
+
+x,
+
+y
+
 );
 
-y += 25;
+startAngle+=sliceAngle;
 
-}
+});
+
+/* ---------- Legend ---------- */
+
+const legend=
+document.getElementById(
+"chartLegend"
 );
+
+legend.innerHTML="";
+
+data
+.sort((a,b)=>b[1]-a[1])
+.forEach((item,index)=>{
+
+const percent=
+(
+(item[1]/total)*100
+).toFixed(1);
+
+const medal=
+index===0 ? "🥇" :
+index===1 ? "🥈" :
+index===2 ? "🥉" : "📌";
+
+legend.innerHTML+=`
+
+<li style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+margin-bottom:8px;
+border-radius:10px;
+background:rgba(255,255,255,.08);
+">
+
+<div>
+
+<span style="
+display:inline-block;
+width:15px;
+height:15px;
+background:${colors[index%colors.length]};
+border-radius:50%;
+margin-right:10px;
+"></span>
+
+${medal}
+<b>${item[0]}</b>
+
+</div>
+
+<div>
+
+₹${item[1]}
+
+<br>
+
+<small>
+
+${percent}%
+
+</small>
+
+</div>
+
+</li>
+
+`;
+
+});
 
 }
 
@@ -922,40 +1067,25 @@ document.getElementById(
 "showChartBtn"
 );
 
-const chartContainer =
-document.getElementById(
-"chartContainer"
-);
+const analyticsModal =
+document.getElementById("analyticsModal");
 
-showChartBtn.addEventListener(
-"click",
-()=>{
+const closeAnalytics =
+document.getElementById("closeAnalytics");
 
-if(
-chartContainer.style.display ===
-"none"
-){
+showChartBtn.addEventListener("click",()=>{
 
-chartContainer.style.display =
-"block";
-
-showChartBtn.innerText =
-"❌ Hide Expense Distribution";
+analyticsModal.style.display="flex";
 
 drawChart();
 
-}else{
+});
 
-chartContainer.style.display =
-"none";
+closeAnalytics.addEventListener("click",()=>{
 
-showChartBtn.innerText =
-"📊 Show Expense Distribution";
+analyticsModal.style.display="none";
 
-}
-
-}
-);
+});
 
 /* ==========================
    AVERAGE DAILY EXPENSE
@@ -1099,7 +1229,7 @@ updateDashboard();
 updateAverage();
 
 drawChart();
-
+updateSavingsGoal();
 /* ==========================
    AUTO REFRESH
 ========================== */
@@ -1115,5 +1245,418 @@ oldUpdate();
 updateAverage();
 
 drawChart();
-
+updateSavingsGoal();
 };
+
+/* ==========================
+   WEEKLY LIMIT
+========================== */
+
+let weeklyLimit =
+Number(
+localStorage.getItem(
+"weekly_limit"
+)
+) || 0;
+
+/* Load limit */
+
+document.getElementById(
+"weeklyLimit"
+).textContent =
+"₹" + weeklyLimit;
+
+/* Open modal */
+
+document.getElementById(
+"setLimitBtn"
+).addEventListener(
+"click",
+()=>{
+
+document.getElementById(
+"limitModal"
+).style.display =
+"flex";
+
+document.getElementById(
+"weeklyLimitInput"
+).value =
+weeklyLimit;
+
+}
+);
+
+/* Close modal */
+
+document.getElementById(
+"closeLimitBtn"
+).addEventListener(
+"click",
+()=>{
+
+document.getElementById(
+"limitModal"
+).style.display =
+"none";
+
+}
+);
+
+/* Save limit */
+
+document.getElementById(
+"saveLimitBtn"
+).addEventListener(
+"click",
+()=>{
+
+weeklyLimit =
+Number(
+document.getElementById(
+"weeklyLimitInput"
+).value
+);
+
+localStorage.setItem(
+"weekly_limit",
+weeklyLimit
+);
+
+document.getElementById(
+"weeklyLimit"
+).textContent =
+"₹" + weeklyLimit;
+
+document.getElementById(
+"limitModal"
+).style.display =
+"none";
+
+updateWeeklyBudget();
+
+});function updateWeeklyBudget(){
+
+    const today = new Date();
+
+    const firstDay = new Date(today);
+
+    firstDay.setHours(0,0,0,0);
+
+    firstDay.setDate(
+        today.getDate() - today.getDay()
+    );
+
+    const currentWeek =
+    firstDay.toISOString().split("T")[0];
+
+    const savedWeek =
+    localStorage.getItem("budgetWeek");
+
+    if(savedWeek !== currentWeek){
+
+        localStorage.setItem(
+            "budgetWeek",
+            currentWeek
+        );
+
+        budgetAlertShown = false;
+        alert50 = false;
+        alert75 = false;
+        alert90 = false;
+
+        localStorage.removeItem("budgetAlertShown");
+        localStorage.removeItem("alert50");
+        localStorage.removeItem("alert75");
+        localStorage.removeItem("alert90");
+
+    }
+
+    let weekExpense = 0;
+
+    expenses.forEach(day=>{
+
+        const d = new Date(day.date);
+
+        if(d >= firstDay && d <= today){
+
+            day.items.forEach(item=>{
+
+                weekExpense += item.amount;
+
+            });
+
+        }
+
+    });
+
+    document.getElementById("weekSpent").textContent =
+    weekExpense;
+
+    document.getElementById("weeklyLimit").textContent =
+    weeklyLimit;
+
+    const remaining =
+    weeklyLimit - weekExpense;
+
+    document.getElementById("remainingBudget").textContent =
+    "₹" + remaining;
+
+    let percent = 0;
+
+    if(weeklyLimit > 0){
+
+        percent =
+        Math.min(
+            (weekExpense/weeklyLimit)*100,
+            100
+        );
+
+    }
+
+    /* Progress */
+
+    document.getElementById("budgetProgress").style.width =
+    percent + "%";
+
+    document.getElementById("budgetPercent").textContent =
+    Math.round(percent) + "%";
+
+    const progress =
+    document.getElementById("budgetProgress");
+
+    if(percent>=100){
+
+        progress.style.background="#ef4444";
+
+    }
+
+    else if(percent>=90){
+
+        progress.style.background="#f97316";
+
+    }
+
+    else if(percent>=75){
+
+        progress.style.background="#eab308";
+
+    }
+
+    else{
+
+        progress.style.background="#22c55e";
+
+    }
+
+    /* Remaining */
+
+    const remainBox =
+    document.getElementById("remainingBudget");
+
+    if(remaining<=0){
+
+        remainBox.style.color="#ef4444";
+
+    }
+
+    else if(remaining<=weeklyLimit*0.25){
+
+        remainBox.style.color="#f97316";
+
+    }
+
+    else if(remaining<=weeklyLimit*0.5){
+
+        remainBox.style.color="#eab308";
+
+    }
+
+    else{
+
+        remainBox.style.color="#22c55e";
+
+    }
+
+    /* Notifications */
+
+    if(percent>=50 && !alert50){
+
+        alert50=true;
+
+        localStorage.setItem(
+            "alert50",
+            "true"
+        );
+
+        alert("🟡 You have used 50% of your weekly budget.");
+
+    }
+
+    if(percent>=75 && !alert75){
+
+        alert75=true;
+
+        localStorage.setItem(
+            "alert75",
+            "true"
+        );
+
+        alert("🟠 You have used 75% of your weekly budget.");
+
+    }
+
+    if(percent>=90 && !alert90){
+
+        alert90=true;
+
+        localStorage.setItem(
+            "alert90",
+            "true"
+        );
+
+        alert("🔴 Warning! 90% of your weekly budget is used.");
+
+    }
+
+    if(percent>=100){
+
+        showBudgetAlert(weekExpense);
+
+    }
+
+}function showBudgetAlert(spent){
+
+    if(budgetAlertShown)
+    return;
+
+    budgetAlertShown=true;
+
+    localStorage.setItem(
+        "budgetAlertShown",
+        "true"
+    );
+
+    document.getElementById(
+        "budgetAlert"
+    ).style.display="flex";
+
+    document.getElementById(
+        "alertMessage"
+    ).innerHTML=`
+
+    <b>Weekly Limit :</b>
+
+    ₹${weeklyLimit}
+
+    <br><br>
+
+    <b>Total Spent :</b>
+
+    ₹${spent}
+
+    <br><br>
+
+    <b style="color:red;">
+
+    Budget Limit Exceeded!
+
+    </b>
+
+    <br>
+
+    You exceeded by
+
+    ₹${spent-weeklyLimit}
+
+    `;
+
+}
+updateWeeklyBudget();
+
+//open goal modal
+document.getElementById("setGoalBtn")
+.addEventListener("click",()=>{
+
+document.getElementById("goalModal").style.display="flex";
+
+document.getElementById("goalNameInput").value=
+goalName;
+
+document.getElementById("goalAmountInput").value=
+savingsGoal;
+
+});
+//close goal modal
+document.getElementById("closeGoalBtn")
+.addEventListener("click",()=>{
+
+document.getElementById("goalModal").style.display="none";
+
+});
+//save goal
+document.getElementById("saveGoalBtn")
+.addEventListener("click",()=>{
+
+goalName=
+document.getElementById("goalNameInput").value;
+
+savingsGoal=
+Number(
+document.getElementById("goalAmountInput").value
+);
+
+localStorage.setItem(
+"goalName",
+goalName
+);
+
+localStorage.setItem(
+"goalAmount",
+savingsGoal
+);
+
+document.getElementById("goalModal").style.display="none";
+
+updateSavingsGoal();
+
+});
+//update saving function
+function updateSavingsGoal(){
+
+let totalSaved=0;
+
+expenses.forEach(day=>{
+
+totalSaved+=Number(day.savings||0);
+
+});
+
+document.getElementById("goalName").textContent=
+goalName;
+
+document.getElementById("goalTarget").textContent=
+"₹"+savingsGoal;
+
+document.getElementById("goalSaved").textContent=
+"₹"+totalSaved;
+
+let percent=0;
+
+if(savingsGoal>0){
+
+percent=
+(totalSaved/savingsGoal)*100;
+
+}
+
+if(percent>100)
+percent=100;
+
+document.getElementById("goalPercent").textContent=
+Math.round(percent)+"%";
+
+document.getElementById("goalProgress").style.width=
+percent+"%";
+
+}
