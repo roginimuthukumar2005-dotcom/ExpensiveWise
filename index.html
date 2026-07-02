@@ -460,6 +460,95 @@ OK
     </div>
 
 </div>
+
+<div class="shopping-section">
+
+    <div class="shopping-header">
+
+        <h2>🛒 Shopping / To Do List</h2>
+
+        <button id="addShopping">
+            + Add Item
+        </button>
+
+    </div>
+
+    <div id="shoppingContainer"></div>
+
+</div><div class="modal" id="shoppingModal">
+
+    <div class="shopping-modal">
+
+        <div class="shopping-top">
+
+            <div class="shopping-icon">
+                🛒
+            </div>
+
+            <div>
+
+                <h2>Add Shopping Item</h2>
+
+                <p>Add a new item to your shopping list</p>
+
+            </div>
+
+            <button id="closeShopping" class="close-btn">
+                ✕
+            </button>
+
+        </div>
+
+        <div class="shopping-body">
+
+            <label>Item Name</label>
+
+            <input
+                type="text"
+                id="shoppingInput"
+                placeholder="Enter item name">
+
+            <label>Category</label>
+
+            <select id="shoppingCategory">
+
+                <option value="">Select Category</option>
+
+                <option>Skin Care</option>
+
+                <option>Grocery</option>
+
+                <option>Household</option>
+
+                <option>Medicine</option>
+
+                <option>Study</option>
+
+                <option>Other</option>
+
+            </select>
+
+        </div>
+
+        <div class="shopping-footer">
+
+            <button id="closeShoppingBtn" class="cancel-btn">
+
+                ❌ Cancel
+
+            </button>
+
+            <button id="saveShopping" class="save-btn">
+
+                💾 Save Item
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 <script src="script.js"></script>
 
 </body>
