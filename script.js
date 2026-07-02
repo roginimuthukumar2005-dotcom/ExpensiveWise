@@ -83,6 +83,13 @@ localStorage.getItem(
 )
 ) || [];
 
+
+let shoppingList =
+JSON.parse(
+localStorage.getItem("shoppingList")
+) || [];
+let editShoppingIndex = -1;
+
 /* ==========================
    DARK MODE
 ========================== */
@@ -642,7 +649,8 @@ function updateDashboard(){
 
 let totalExpense = 0;
 let totalSavings = 0;
-let totalBalance = 0;
+let latestBalance = 0;
+let latestDate = "";
 
 let categories = {};
 
@@ -670,6 +678,13 @@ categories[item.name] =
 
 totalSavings +=
 day.savings || 0;
+
+if(
+    day.date > latestDate
+){
+    latestDate = day.date;
+    latestBalance = Number(day.balance || 0);
+}
 
 totalBalance +=
 day.balance || 0;
@@ -714,7 +729,7 @@ document.getElementById(
 document.getElementById(
 "totalBalance"
 ).textContent =
-"₹" + totalBalance;
+"₹" + latestBalance;
 
 document.getElementById(
 "recordedDays"
@@ -1230,6 +1245,7 @@ updateAverage();
 
 drawChart();
 updateSavingsGoal();
+renderShopping();
 /* ==========================
    AUTO REFRESH
 ========================== */
@@ -1246,6 +1262,7 @@ updateAverage();
 
 drawChart();
 updateSavingsGoal();
+renderShopping();
 };
 
 /* ==========================
@@ -1620,6 +1637,7 @@ document.getElementById("goalModal").style.display="none";
 
 updateSavingsGoal();
 
+
 });
 //update saving function
 function updateSavingsGoal(){
@@ -1660,3 +1678,216 @@ document.getElementById("goalProgress").style.width=
 percent+"%";
 
 }
+function renderShopping(){
+
+shoppingContainer.innerHTML="";
+
+shoppingList.forEach((item,index)=>{
+
+shoppingContainer.innerHTML+=`
+
+<div class="shopping-card ${item.bought?"done":""}">
+
+<div class="shopping-title">
+
+${item.name}
+
+</div>
+
+<div class="shopping-category">
+
+${item.category || "General"}
+
+</div>
+
+<div>
+
+Status :
+
+${item.bought?
+
+"<span style='color:#22c55e;'>✔ Bought</span>":
+
+"<span style='color:#facc15;'>Pending</span>"
+
+}
+
+</div>
+
+<div class="shopping-actions">
+
+<button
+
+class="buy-btn"
+
+onclick="toggleBuy(${index})">
+
+${item.bought?"Bought":"🛒 Buy"}
+
+</button>
+
+<button
+
+class="edit-btn"
+
+onclick="editShopping(${index})">
+
+✏️ Edit
+
+</button>
+
+<button
+
+class="delete-btn"
+
+onclick="deleteShopping(${index})">
+🗑️ Delete
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+//buy 
+function toggleBuy(index){
+
+shoppingList[index].bought=
+
+!shoppingList[index].bought;
+
+localStorage.setItem(
+
+"shoppingList",
+
+JSON.stringify(shoppingList)
+
+);
+
+renderShopping();
+
+}
+//edit
+function editShopping(index){
+
+editShoppingIndex=index;
+
+shoppingInput.value=
+
+shoppingList[index].name;
+
+shoppingCategory.value=
+
+shoppingList[index].category;
+
+shoppingModal.style.display="flex";
+
+}
+//delete 
+function deleteShopping(index){
+
+if(confirm("Delete item?")){
+
+shoppingList.splice(index,1);
+
+localStorage.setItem(
+
+"shoppingList",
+
+JSON.stringify(shoppingList)
+
+);
+
+renderShopping();
+
+}
+
+}
+//close
+document.getElementById("closeShopping").onclick = () => {
+
+    shoppingModal.style.display = "none";
+
+};
+
+document.getElementById("closeShoppingBtn").onclick = () => {
+
+    shoppingModal.style.display = "none";
+
+};
+//open model
+document
+.getElementById("addShopping")
+.onclick=()=>{
+
+editShoppingIndex=-1;
+
+shoppingInput.value="";
+
+shoppingCategory.value="";
+
+shoppingModal.style.display="flex";
+
+};
+//save
+document
+.getElementById("saveShopping")
+.onclick=()=>{
+
+const name=
+shoppingInput.value.trim();
+
+const category=
+shoppingCategory.value.trim();
+
+if(!name){
+
+alert("Enter item");
+
+return;
+
+}
+
+if(editShoppingIndex==-1){
+
+shoppingList.push({
+
+name,
+
+category,
+
+bought:false
+
+});
+
+}else{
+
+shoppingList[editShoppingIndex].name=name;
+
+shoppingList[editShoppingIndex].category=category;
+
+}
+
+localStorage.setItem(
+
+"shoppingList",
+
+JSON.stringify(shoppingList)
+
+);
+
+shoppingModal.style.display="none";
+
+renderShopping();
+
+
+window.toggleBuy=toggleBuy;
+window.editShopping=editShopping;
+window.deleteShopping=deleteShopping;
+
+};
